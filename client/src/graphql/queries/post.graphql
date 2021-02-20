@@ -1,0 +1,5 @@
+query GetSinglePost($postId: String!) {
+  post(postId: $postId) {
+    ...RegularPost
+  }
+}

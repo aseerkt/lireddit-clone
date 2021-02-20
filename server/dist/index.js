@@ -19,14 +19,38 @@ const express_1 = __importDefault(require("express"));
 const apollo_server_express_1 = require("apollo-server-express");
 const type_graphql_1 = require("type-graphql");
 const constants_1 = require("./constants");
+const express_session_1 = __importDefault(require("express-session"));
+const connect_redis_1 = __importDefault(require("connect-redis"));
+const ioredis_1 = __importDefault(require("ioredis"));
+const cors_1 = __importDefault(require("cors"));
+const redisStore = connect_redis_1.default(express_session_1.default);
+const redisClient = new ioredis_1.default();
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     yield typeorm_1.createConnection();
     const app = express_1.default();
+    app.use(cors_1.default({
+        origin: 'http://localhost:3000',
+        credentials: true,
+    }));
+    app.use(express_session_1.default({
+        name: constants_1.COOKIE_NAME,
+        secret: 'keyboard cat',
+        store: new redisStore({ client: redisClient, disableTouch: true }),
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            httpOnly: true,
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+            sameSite: 'lax',
+            secure: constants_1.__prod__,
+        },
+    }));
     app.get('/', (_req, res) => res.send('LiReddit API running'));
     const apolloServer = new apollo_server_express_1.ApolloServer({
         schema: yield type_graphql_1.buildSchema({ resolvers: [__dirname + '/resolvers/*.js'] }),
+        context: ({ req, res }) => ({ req, res, redis: redisClient }),
     });
-    apolloServer.applyMiddleware({ app });
+    apolloServer.applyMiddleware({ app, cors: false });
     app.listen(constants_1.PORT, () => {
         console.log(`API running on http://localhost:${constants_1.PORT}${apolloServer.graphqlPath}`.blue
             .bold);

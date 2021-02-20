@@ -7,9 +7,9 @@ module.exports = {
   password: 'postgres',
   synchronize: true,
   logging: true,
-  entities: ['src/entities/**/*.js'],
-  migrations: ['src/migrations/**/*.js'],
-  subscribers: ['src/subscribers/**/*.js'],
+  entities: ['dist/entities/**/*.js'],
+  migrations: ['dist/migrations/**/*.js'],
+  subscribers: ['dist/subscribers/**/*.js'],
   cli: {
     entitiesDir: 'src/entities',
     migrationsDir: 'src/migration',
