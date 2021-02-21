@@ -23,10 +23,11 @@ const express_session_1 = __importDefault(require("express-session"));
 const connect_redis_1 = __importDefault(require("connect-redis"));
 const ioredis_1 = __importDefault(require("ioredis"));
 const cors_1 = __importDefault(require("cors"));
+const dbConfig_1 = require("./dbConfig");
 const redisStore = connect_redis_1.default(express_session_1.default);
 const redisClient = new ioredis_1.default();
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
-    yield typeorm_1.createConnection();
+    yield typeorm_1.createConnection(dbConfig_1.dbConfig);
     const app = express_1.default();
     app.use(cors_1.default({
         origin: 'http://localhost:3000',

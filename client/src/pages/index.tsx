@@ -1,12 +1,11 @@
-import Navbar from '../components/Navbar';
+import Layout from '../components/Layout';
 import { useGetPostsQuery } from '../generated/graphql';
 import withApollo from '../utils/withApollo';
 
 const Index = () => {
   const { data, loading } = useGetPostsQuery();
   return (
-    <>
-      <Navbar />
+    <Layout>
       {data &&
         data.posts &&
         data.posts.map(({ title, body, id }) => (
@@ -14,7 +13,7 @@ const Index = () => {
             {title} | {body}
           </h1>
         ))}
-    </>
+    </Layout>
   );
 };
 

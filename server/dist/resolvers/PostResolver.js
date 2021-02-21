@@ -24,6 +24,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PostResolver = void 0;
 const type_graphql_1 = require("type-graphql");
 const Post_1 = require("../entities/Post");
+const isAuth_1 = require("../middlewares/isAuth");
 let PostResolver = class PostResolver {
     posts() {
         return Post_1.Post.find({ relations: ['creator'] });
@@ -84,6 +85,7 @@ __decorate([
 ], PostResolver.prototype, "post", null);
 __decorate([
     type_graphql_1.Mutation(() => Boolean),
+    type_graphql_1.UseMiddleware(isAuth_1.isAuth),
     __param(0, type_graphql_1.Arg('title')),
     __param(1, type_graphql_1.Arg('body')),
     __param(2, type_graphql_1.Ctx()),
@@ -93,6 +95,7 @@ __decorate([
 ], PostResolver.prototype, "createPost", null);
 __decorate([
     type_graphql_1.Mutation(() => Boolean),
+    type_graphql_1.UseMiddleware(isAuth_1.isAuth),
     __param(0, type_graphql_1.Arg('postId')),
     __param(1, type_graphql_1.Arg('title')),
     __param(2, type_graphql_1.Arg('body')),
@@ -103,6 +106,7 @@ __decorate([
 ], PostResolver.prototype, "updatePost", null);
 __decorate([
     type_graphql_1.Mutation(() => Boolean),
+    type_graphql_1.UseMiddleware(isAuth_1.isAuth),
     __param(0, type_graphql_1.Arg('postId')),
     __param(1, type_graphql_1.Ctx()),
     __metadata("design:type", Function),

@@ -43,7 +43,13 @@ const Navbar = () => {
         <Link px={2} py={1}>
           {data.me.username}
         </Link>
+        <NextLink href='/create-post'>
+          <Button size='xs' px={2} ml={2}>
+            Create Post
+          </Button>
+        </NextLink>
         <Button
+          size='xs'
           onClick={() => {
             logout();
           }}
@@ -57,7 +63,7 @@ const Navbar = () => {
     );
   }
   return (
-    <Box bg='tomato' py={4}>
+    <Box bg='tomato' position='sticky' top='0' py={3}>
       <Container maxW='6xl'>
         <Flex justifyContent='space-between' alignItems='center'>
           <Link href='#'>LiReddit</Link>

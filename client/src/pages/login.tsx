@@ -30,7 +30,9 @@ const Login = () => {
             if (errors) {
               setErrors(getErrorMap(errors));
             } else if (user) {
-              router.push('/');
+              if (typeof router.query.next === 'string') {
+                router.push(router.query.next);
+              } else router.push('/');
             }
             console.log(res);
           } catch (err) {
