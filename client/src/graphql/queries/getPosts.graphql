@@ -1,0 +1,8 @@
+query GetPosts($limit: Int!, $cursor: String) {
+  getPosts(limit: $limit, cursor: $cursor) {
+    posts {
+      ...RegularPost
+    }
+    hasMore
+  }
+}

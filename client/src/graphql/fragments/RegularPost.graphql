@@ -2,6 +2,7 @@ fragment RegularPost on Post {
   id
   title
   body
+  points
   createdAt
   updatedAt
   creator {

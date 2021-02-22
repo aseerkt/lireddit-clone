@@ -31,9 +31,16 @@ export type Post = {
   id: Scalars['String'];
   title: Scalars['String'];
   body: Scalars['String'];
-  createdAt: Scalars['DateTime'];
+  points: Scalars['Int'];
   creator: User;
+  createdAt: Scalars['DateTime'];
   updatedAt: Scalars['DateTime'];
+};
+
+export type PaginatedPostResponse = {
+  __typename?: 'PaginatedPostResponse';
+  posts: Array<Post>;
+  hasMore: Scalars['Boolean'];
 };
 
 export type FieldError = {
@@ -50,9 +57,15 @@ export type UserResponse = {
 
 export type Query = {
   __typename?: 'Query';
-  posts: Array<Post>;
+  getPosts: PaginatedPostResponse;
   post?: Maybe<Post>;
   me?: Maybe<User>;
+};
+
+
+export type QueryGetPostsArgs = {
+  cursor?: Maybe<Scalars['String']>;
+  limit: Scalars['Int'];
 };
 
 
@@ -116,7 +129,7 @@ export type MutationChangePasswordArgs = {
 
 export type RegularPostFragment = (
   { __typename?: 'Post' }
-  & Pick<Post, 'id' | 'title' | 'body' | 'createdAt' | 'updatedAt'>
+  & Pick<Post, 'id' | 'title' | 'body' | 'points' | 'createdAt' | 'updatedAt'>
   & { creator: (
     { __typename?: 'User' }
     & UserFieldFragment
@@ -233,6 +246,24 @@ export type UpdatePostMutation = (
   & Pick<Mutation, 'updatePost'>
 );
 
+export type GetPostsQueryVariables = Exact<{
+  limit: Scalars['Int'];
+  cursor?: Maybe<Scalars['String']>;
+}>;
+
+
+export type GetPostsQuery = (
+  { __typename?: 'Query' }
+  & { getPosts: (
+    { __typename?: 'PaginatedPostResponse' }
+    & Pick<PaginatedPostResponse, 'hasMore'>
+    & { posts: Array<(
+      { __typename?: 'Post' }
+      & RegularPostFragment
+    )> }
+  ) }
+);
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -257,17 +288,6 @@ export type GetSinglePostQuery = (
   )> }
 );
 
-export type GetPostsQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetPostsQuery = (
-  { __typename?: 'Query' }
-  & { posts: Array<(
-    { __typename?: 'Post' }
-    & RegularPostFragment
-  )> }
-);
-
 export const UserFieldFragmentDoc = gql`
     fragment UserField on User {
   id
@@ -280,6 +300,7 @@ export const RegularPostFragmentDoc = gql`
   id
   title
   body
+  points
   createdAt
   updatedAt
   creator {
@@ -550,6 +571,43 @@ export function useUpdatePostMutation(baseOptions?: Apollo.MutationHookOptions<U
 export type UpdatePostMutationHookResult = ReturnType<typeof useUpdatePostMutation>;
 export type UpdatePostMutationResult = Apollo.MutationResult<UpdatePostMutation>;
 export type UpdatePostMutationOptions = Apollo.BaseMutationOptions<UpdatePostMutation, UpdatePostMutationVariables>;
+export const GetPostsDocument = gql`
+    query GetPosts($limit: Int!, $cursor: String) {
+  getPosts(limit: $limit, cursor: $cursor) {
+    posts {
+      ...RegularPost
+    }
+    hasMore
+  }
+}
+    ${RegularPostFragmentDoc}`;
+
+/**
+ * __useGetPostsQuery__
+ *
+ * To run a query within a React component, call `useGetPostsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPostsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPostsQuery({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
+ *   },
+ * });
+ */
+export function useGetPostsQuery(baseOptions: Apollo.QueryHookOptions<GetPostsQuery, GetPostsQueryVariables>) {
+        return Apollo.useQuery<GetPostsQuery, GetPostsQueryVariables>(GetPostsDocument, baseOptions);
+      }
+export function useGetPostsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPostsQuery, GetPostsQueryVariables>) {
+          return Apollo.useLazyQuery<GetPostsQuery, GetPostsQueryVariables>(GetPostsDocument, baseOptions);
+        }
+export type GetPostsQueryHookResult = ReturnType<typeof useGetPostsQuery>;
+export type GetPostsLazyQueryHookResult = ReturnType<typeof useGetPostsLazyQuery>;
+export type GetPostsQueryResult = Apollo.QueryResult<GetPostsQuery, GetPostsQueryVariables>;
 export const MeDocument = gql`
     query Me {
   me {
@@ -615,35 +673,3 @@ export function useGetSinglePostLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type GetSinglePostQueryHookResult = ReturnType<typeof useGetSinglePostQuery>;
 export type GetSinglePostLazyQueryHookResult = ReturnType<typeof useGetSinglePostLazyQuery>;
 export type GetSinglePostQueryResult = Apollo.QueryResult<GetSinglePostQuery, GetSinglePostQueryVariables>;
-export const GetPostsDocument = gql`
-    query GetPosts {
-  posts {
-    ...RegularPost
-  }
-}
-    ${RegularPostFragmentDoc}`;
-
-/**
- * __useGetPostsQuery__
- *
- * To run a query within a React component, call `useGetPostsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetPostsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetPostsQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetPostsQuery(baseOptions?: Apollo.QueryHookOptions<GetPostsQuery, GetPostsQueryVariables>) {
-        return Apollo.useQuery<GetPostsQuery, GetPostsQueryVariables>(GetPostsDocument, baseOptions);
-      }
-export function useGetPostsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPostsQuery, GetPostsQueryVariables>) {
-          return Apollo.useLazyQuery<GetPostsQuery, GetPostsQueryVariables>(GetPostsDocument, baseOptions);
-        }
-export type GetPostsQueryHookResult = ReturnType<typeof useGetPostsQuery>;
-export type GetPostsLazyQueryHookResult = ReturnType<typeof useGetPostsLazyQuery>;
-export type GetPostsQueryResult = Apollo.QueryResult<GetPostsQuery, GetPostsQueryVariables>;

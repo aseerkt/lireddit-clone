@@ -10,7 +10,14 @@ interface FormWrapperProps {
 const FormWrapper: React.FC<FormWrapperProps> = ({ title, children }) => {
   return (
     <Container maxW='sm'>
-      <Box mt={8} border='1px' p={5} borderRadius='md' borderColor='gray.300'>
+      <Box
+        mt={8}
+        border='1px'
+        p={5}
+        bg='white'
+        borderRadius='md'
+        borderColor='gray.300'
+      >
         <Center mb={1}>
           <NextLink href='/'>
             <Link textAlign='center'>

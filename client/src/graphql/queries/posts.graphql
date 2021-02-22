@@ -1,5 +1,0 @@
-query GetPosts {
-  posts {
-    ...RegularPost
-  }
-}

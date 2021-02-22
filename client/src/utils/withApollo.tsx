@@ -7,6 +7,7 @@ import {
 import { withApollo } from 'next-apollo';
 import { onError } from '@apollo/client/link/error';
 import Router from 'next/router';
+import { PaginatedPostResponse } from '../generated/graphql';
 
 const httpLink = new HttpLink({
   uri: 'http://localhost:5000/graphql',
@@ -28,8 +29,27 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 });
 
 const client = new ApolloClient({
-  cache: new InMemoryCache(),
   link: ApolloLink.from([errorLink, httpLink]),
+  cache: new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          getPosts: {
+            keyArgs: false,
+            merge(
+              existing: PaginatedPostResponse,
+              incoming: PaginatedPostResponse
+            ) {
+              return {
+                ...incoming,
+                posts: [...(existing?.posts || []), ...incoming.posts],
+              };
+            },
+          },
+        },
+      },
+    },
+  }),
 });
 
 export default withApollo(client);

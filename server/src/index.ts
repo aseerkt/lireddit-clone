@@ -9,13 +9,12 @@ import session from 'express-session';
 import connectRedis from 'connect-redis';
 import Redis from 'ioredis';
 import cors from 'cors';
-import { dbConfig } from './dbConfig';
 
 const redisStore = connectRedis(session);
 const redisClient = new Redis();
 
 const main = async () => {
-  await createConnection(dbConfig);
+  await createConnection();
 
   const app = express();
   app.use(

@@ -1,5 +1,21 @@
-import { Container, Flex, Box, Link, Button } from '@chakra-ui/react';
+import { TriangleDownIcon } from '@chakra-ui/icons';
+import {
+  Container,
+  Flex,
+  Box,
+  Link,
+  Button,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Text,
+  Heading,
+  IconButton,
+} from '@chakra-ui/react';
 import NextLink from 'next/link';
+import React from 'react';
+import { FaPen, FaReddit } from 'react-icons/fa';
 import {
   MeDocument,
   useLogoutMutation,
@@ -26,50 +42,74 @@ const Navbar = () => {
     body = (
       <>
         <NextLink href='/login'>
-          <Link px={2} py={1}>
-            Login
-          </Link>
+          <Button
+            textTransform='uppercase'
+            size='sm'
+            variant='outline'
+            colorScheme='blue'
+          >
+            Log In
+          </Button>
         </NextLink>
         <NextLink href='/signup'>
-          <Link px={2} py={1} ml={2}>
+          <Button textTransform='uppercase' size='sm' colorScheme='blue' ml={2}>
             Sign Up
-          </Link>
+          </Button>
         </NextLink>
       </>
     );
   } else if (data && data.me) {
     body = (
       <>
-        <Link px={2} py={1}>
-          {data.me.username}
-        </Link>
         <NextLink href='/create-post'>
-          <Button size='xs' px={2} ml={2}>
-            Create Post
-          </Button>
+          <Link px={2} py={1} title='Create Post'>
+            <FaPen />
+          </Link>
         </NextLink>
-        <Button
-          size='xs'
-          onClick={() => {
-            logout();
-          }}
-          isLoading={loading}
-          px={2}
-          ml={2}
-        >
-          Logout
-        </Button>
+        <Menu>
+          <MenuButton
+            as={Button}
+            size='sm'
+            borderRadius='sm'
+            width={20}
+            bg='white'
+            variant='outline'
+            fontWeight='normal'
+            rightIcon={<TriangleDownIcon color='gray' boxSize={3} />}
+          >
+            {data.me.username}
+          </MenuButton>
+          <MenuList>
+            <MenuItem
+              onClick={() => {
+                logout();
+              }}
+            >
+              Log Out
+            </MenuItem>
+          </MenuList>
+        </Menu>
       </>
     );
   }
   return (
-    <Box bg='tomato' position='sticky' top='0' py={3}>
+    <Box bg='white' shadow='md' position='sticky' top='0' zIndex={3} py={1}>
       <Container maxW='6xl'>
         <Flex justifyContent='space-between' alignItems='center'>
-          <Link href='#'>LiReddit</Link>
-          <Box textTransform='uppercase' fontSize='sm' textDecoration='none'>
+          <Link textDecoration='none' display='flex' alignItems='center'>
+            <FaReddit size='2.3em' color='orange' />
+            <Heading fontSize='2xl' fontWeight='semibold' ml={2}>
+              lireddit
+            </Heading>
+          </Link>
+          <Flex
+            align='center'
+            textTransform='uppercase'
+            fontSize='sm'
+            textDecoration='none'
+          >
             {body}
-          </Box>
+          </Flex>
         </Flex>
       </Container>
     </Box>

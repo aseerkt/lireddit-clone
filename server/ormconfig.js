@@ -1,15 +1,15 @@
-import { ConnectionOptions } from 'typeorm';
-import { __prod__ } from './constants';
+const __dev__ = process.env.NODE_ENV === 'development';
 
-export const dbConfig: ConnectionOptions = {
+module.exports = {
+  name: 'default',
   type: 'postgres',
   host: 'localhost',
   port: 5432,
   database: 'lireddit',
   username: 'postgres',
   password: 'postgres',
-  synchronize: __prod__,
-  logging: __prod__,
+  synchronize: __dev__,
+  logging: __dev__,
   entities: ['dist/entities/**/*.js'],
   migrations: ['dist/migrations/**/*.js'],
   subscribers: ['dist/subscribers/**/*.js'],
@@ -18,4 +18,5 @@ export const dbConfig: ConnectionOptions = {
     migrationsDir: 'src/migration',
     subscribersDir: 'src/subscriber',
   },
+  seeds: ['dist/seeds/**/*.js'],
 };

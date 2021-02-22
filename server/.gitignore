@@ -6,3 +6,5 @@ tmp/
 temp/
 
 dumb.rdb
+.env
+.env.production

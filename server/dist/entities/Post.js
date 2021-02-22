@@ -31,10 +31,10 @@ __decorate([
     __metadata("design:type", String)
 ], Post.prototype, "body", void 0);
 __decorate([
-    type_graphql_1.Field(() => Date),
-    typeorm_1.CreateDateColumn(),
-    __metadata("design:type", Date)
-], Post.prototype, "createdAt", void 0);
+    type_graphql_1.Field(() => type_graphql_1.Int),
+    typeorm_1.Column({ default: 0 }),
+    __metadata("design:type", Number)
+], Post.prototype, "points", void 0);
 __decorate([
     typeorm_1.Column(),
     __metadata("design:type", Number)
@@ -44,6 +44,11 @@ __decorate([
     typeorm_1.ManyToOne(() => User_1.User, (user) => user.posts),
     __metadata("design:type", User_1.User)
 ], Post.prototype, "creator", void 0);
+__decorate([
+    type_graphql_1.Field(() => Date),
+    typeorm_1.CreateDateColumn(),
+    __metadata("design:type", Date)
+], Post.prototype, "createdAt", void 0);
 __decorate([
     type_graphql_1.Field(() => Date),
     typeorm_1.UpdateDateColumn(),

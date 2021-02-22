@@ -1,4 +1,4 @@
-import { Field, ObjectType } from 'type-graphql';
+import { Field, Int, ObjectType } from 'type-graphql';
 import {
   BaseEntity,
   Column,
@@ -25,9 +25,9 @@ export class Post extends BaseEntity {
   @Column({ type: 'text' })
   body: string;
 
-  @Field(() => Date)
-  @CreateDateColumn()
-  createdAt: Date;
+  @Field(() => Int)
+  @Column({ default: 0 })
+  points: number;
 
   @Column()
   creatorId: number;
@@ -35,6 +35,10 @@ export class Post extends BaseEntity {
   @Field(() => User)
   @ManyToOne(() => User, (user) => user.posts)
   creator: User;
+
+  @Field(() => Date)
+  @CreateDateColumn()
+  createdAt: Date;
 
   @Field(() => Date)
   @UpdateDateColumn()

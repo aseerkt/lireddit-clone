@@ -57,8 +57,10 @@ const Login = () => {
               />
 
               <Button
+                textTransform='uppercase'
+                isFullWidth
+                colorScheme='blue'
                 mt={4}
-                colorScheme='teal'
                 isLoading={props.isSubmitting}
                 type='submit'
               >

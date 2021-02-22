@@ -43,7 +43,9 @@ const CreatePost = () => {
             />
             <Button
               mt={4}
-              colorScheme='teal'
+              textTransform='uppercase'
+              isFullWidth
+              colorScheme='blue'
               isLoading={isSubmitting}
               type='submit'
             >

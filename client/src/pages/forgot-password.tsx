@@ -51,7 +51,9 @@ const ForgotPassword = () => {
             </Alert>
             <Button
               mt={4}
-              colorScheme='teal'
+              textTransform='uppercase'
+              isFullWidth
+              colorScheme='blue'
               isLoading={props.isSubmitting}
               type='submit'
             >

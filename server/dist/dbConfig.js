@@ -9,8 +9,8 @@ exports.dbConfig = {
     database: 'lireddit',
     username: 'postgres',
     password: 'postgres',
-    synchronize: constants_1.__prod__,
-    logging: constants_1.__prod__,
+    synchronize: !constants_1.__prod__,
+    logging: !constants_1.__prod__,
     entities: ['dist/entities/**/*.js'],
     migrations: ['dist/migrations/**/*.js'],
     subscribers: ['dist/subscribers/**/*.js'],
@@ -19,5 +19,6 @@ exports.dbConfig = {
         migrationsDir: 'src/migration',
         subscribersDir: 'src/subscriber',
     },
+    seeds: ['src/seeds/**/*{.ts,.js}'],
 };
 //# sourceMappingURL=dbConfig.js.map
