@@ -1,0 +1,10 @@
+fragment PostField on Post {
+  id
+  title
+  body
+  points
+  userVote
+  creatorId
+  createdAt
+  updatedAt
+}

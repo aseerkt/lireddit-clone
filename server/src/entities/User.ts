@@ -13,6 +13,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { Post } from './Post';
+import { Vote } from './Vote';
 
 @ObjectType()
 @Entity('users')
@@ -59,6 +60,9 @@ export class User extends BaseEntity {
   @Field(() => [Post])
   @OneToMany(() => Post, (post) => post.creator)
   posts: Post[];
+
+  @OneToMany(() => Vote, (vote) => vote.voter)
+  votes: Vote[];
 
   // Methods
   @BeforeInsert()

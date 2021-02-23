@@ -10,7 +10,14 @@ import withApollo from '../utils/withApollo';
 
 const CreatePost = () => {
   useIsAuth();
-  const [createPost] = useCreatePostMutation();
+  const [createPost] = useCreatePostMutation({
+    update: (cache, result) => {
+      if (result.data.createPost) {
+        cache.evict({ fieldName: 'getPosts' });
+        cache.gc();
+      }
+    },
+  });
   const router = useRouter();
   return (
     <FormWrapper title='Create Post'>

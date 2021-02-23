@@ -75,6 +75,12 @@ UserResponse = __decorate([
     type_graphql_1.ObjectType()
 ], UserResponse);
 let UserResovler = class UserResovler {
+    email(user, { req }) {
+        if (user.id === req.session.userId) {
+            return user.email;
+        }
+        return '';
+    }
     me({ req }) {
         return User_1.User.findOne({ where: { id: req.session.userId } });
     }
@@ -126,7 +132,7 @@ let UserResovler = class UserResovler {
                         ],
                     };
                 }
-                const valid = yield argon2_1.verify(user === null || user === void 0 ? void 0 : user.password, password);
+                const valid = yield argon2_1.verify(user.password, password);
                 if (!valid) {
                     return {
                         errors: [{ field: 'password', message: 'Incorrect Password' }],
@@ -200,6 +206,13 @@ let UserResovler = class UserResovler {
     }
 };
 __decorate([
+    type_graphql_1.FieldResolver(() => String),
+    __param(0, type_graphql_1.Root()), __param(1, type_graphql_1.Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [User_1.User, Object]),
+    __metadata("design:returntype", void 0)
+], UserResovler.prototype, "email", null);
+__decorate([
     type_graphql_1.Query(() => User_1.User, { nullable: true }),
     __param(0, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
@@ -246,7 +259,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UserResovler.prototype, "changePassword", null);
 UserResovler = __decorate([
-    type_graphql_1.Resolver()
+    type_graphql_1.Resolver(User_1.User)
 ], UserResovler);
 exports.UserResovler = UserResovler;
 //# sourceMappingURL=UserResolver.js.map

@@ -51,7 +51,7 @@ const Navbar = () => {
             Log In
           </Button>
         </NextLink>
-        <NextLink href='/signup'>
+        <NextLink href='/register'>
           <Button textTransform='uppercase' size='sm' colorScheme='blue' ml={2}>
             Sign Up
           </Button>
@@ -68,6 +68,7 @@ const Navbar = () => {
         </NextLink>
         <Menu>
           <MenuButton
+            ml={3}
             as={Button}
             size='sm'
             borderRadius='sm'
@@ -81,8 +82,12 @@ const Navbar = () => {
           </MenuButton>
           <MenuList>
             <MenuItem
-              onClick={() => {
-                logout();
+              onClick={async () => {
+                await logout({
+                  update: (cache, { data }) => {
+                    cache.reset();
+                  },
+                });
               }}
             >
               Log Out
@@ -94,14 +99,16 @@ const Navbar = () => {
   }
   return (
     <Box bg='white' shadow='md' position='sticky' top='0' zIndex={3} py={1}>
-      <Container maxW='6xl'>
+      <Container maxW='5xl'>
         <Flex justifyContent='space-between' alignItems='center'>
-          <Link textDecoration='none' display='flex' alignItems='center'>
-            <FaReddit size='2.3em' color='orange' />
-            <Heading fontSize='2xl' fontWeight='semibold' ml={2}>
-              lireddit
-            </Heading>
-          </Link>
+          <NextLink href='/'>
+            <Link textDecoration='none' display='flex' alignItems='center'>
+              <FaReddit size='2.3em' color='orange' />
+              <Heading fontSize='2xl' fontWeight='semibold' ml={2}>
+                lireddit
+              </Heading>
+            </Link>
+          </NextLink>
           <Flex
             align='center'
             textTransform='uppercase'

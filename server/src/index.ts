@@ -9,6 +9,8 @@ import session from 'express-session';
 import connectRedis from 'connect-redis';
 import Redis from 'ioredis';
 import cors from 'cors';
+import { createUserLoader } from './utils/createUserLoader';
+import { createVoteLoader } from './utils/createVoteLoader';
 
 const redisStore = connectRedis(session);
 const redisClient = new Redis();
@@ -43,7 +45,13 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({ resolvers: [__dirname + '/resolvers/*.js'] }),
-    context: ({ req, res }) => ({ req, res, redis: redisClient }),
+    context: ({ req, res }) => ({
+      req,
+      res,
+      redis: redisClient,
+      userLoader: createUserLoader(),
+      voteLoader: createVoteLoader(),
+    }),
   });
 
   apolloServer.applyMiddleware({ app, cors: false });

@@ -5,10 +5,12 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from './User';
+import { Vote } from './Vote';
 
 @ObjectType()
 @Entity('posts')
@@ -26,15 +28,8 @@ export class Post extends BaseEntity {
   body: string;
 
   @Field(() => Int)
-  @Column({ default: 0 })
+  @Column({ default: 0, type: 'int' })
   points: number;
-
-  @Column()
-  creatorId: number;
-
-  @Field(() => User)
-  @ManyToOne(() => User, (user) => user.posts)
-  creator: User;
 
   @Field(() => Date)
   @CreateDateColumn()
@@ -43,4 +38,31 @@ export class Post extends BaseEntity {
   @Field(() => Date)
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @Field(() => Int, { nullable: true })
+  userVote: number | null;
+
+  // Relations
+
+  @Field()
+  @Column()
+  creatorId: number;
+
+  @Field(() => User)
+  @ManyToOne(() => User, (user) => user.posts)
+  creator: User;
+
+  @OneToMany(() => Vote, (vote) => vote.post)
+  votes: Vote[];
+
+  // Methods
+  getUserVote(userId: number) {
+    if (this.votes && userId) {
+      this.votes.forEach(({ voterId, value }) => {
+        if (voterId === userId) {
+          this.userVote = value;
+        }
+      });
+    }
+  }
 }

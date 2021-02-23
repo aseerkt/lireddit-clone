@@ -1,11 +1,31 @@
+import { hash } from 'argon2';
 import { Connection } from 'typeorm';
 import { Seeder } from 'typeorm-seeding';
-import fakePostData from '../data/MOCK_DATA.json';
+import fakePostData from '../data/postData.json';
+import fakeUserData from '../data/userData.json';
 import { Post } from '../entities/Post';
+import { User } from '../entities/User';
 
-export default class CreatePets implements Seeder {
+let hashedUserData: typeof fakeUserData = [];
+
+fakeUserData.forEach(async (user) => {
+  hashedUserData.push({ ...user, password: await hash(user.password) });
+});
+
+export default class CreateMockData implements Seeder {
   public async run(_: any, connection: Connection): Promise<any> {
-    await Post.delete({});
+    await connection.dropDatabase();
+    await connection.synchronize();
+
+    // Add User Mock Data to DB
+    await connection
+      .createQueryBuilder()
+      .insert()
+      .into(User)
+      .values(hashedUserData)
+      .execute();
+
+    // Add Post Mock Data to DB
     await connection
       .createQueryBuilder()
       .insert()

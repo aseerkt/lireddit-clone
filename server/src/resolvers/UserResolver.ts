@@ -6,10 +6,12 @@ import {
   ArgsType,
   Ctx,
   Field,
+  FieldResolver,
   Mutation,
   ObjectType,
   Query,
   Resolver,
+  Root,
 } from 'type-graphql';
 import { COOKIE_NAME, FORGOT_PASSWORD_PREFIX } from '../constants';
 import { User } from '../entities/User';
@@ -48,8 +50,16 @@ class UserResponse {
   errors?: FieldError[];
 }
 
-@Resolver()
+@Resolver(User)
 export class UserResovler {
+  @FieldResolver(() => String)
+  email(@Root() user: User, @Ctx() { req }: MyContext) {
+    if (user.id === req.session.userId) {
+      return user.email;
+    }
+    return '';
+  }
+
   // Get current logged in user
 
   @Query(() => User, { nullable: true })
@@ -113,7 +123,7 @@ export class UserResovler {
           ],
         };
       }
-      const valid = await verify(user?.password, password);
+      const valid = await verify(user.password, password);
       if (!valid) {
         return {
           errors: [{ field: 'password', message: 'Incorrect Password' }],

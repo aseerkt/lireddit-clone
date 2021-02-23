@@ -15,6 +15,11 @@ const Login = () => {
       const user = result.data.login.user;
       if (user) {
         cache.writeQuery({ query: MeDocument, data: { me: user } });
+        cache.evict({ fieldName: 'getPosts' });
+        cache.gc();
+        if (typeof router.query.next === 'string') {
+          router.push(router.query.next);
+        } else router.push('/');
       }
     },
   });
@@ -29,10 +34,6 @@ const Login = () => {
             const { user, errors } = res.data.login;
             if (errors) {
               setErrors(getErrorMap(errors));
-            } else if (user) {
-              if (typeof router.query.next === 'string') {
-                router.push(router.query.next);
-              } else router.push('/');
             }
             console.log(res);
           } catch (err) {

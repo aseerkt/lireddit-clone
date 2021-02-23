@@ -12,20 +12,34 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const MOCK_DATA_json_1 = __importDefault(require("../data/MOCK_DATA.json"));
+const argon2_1 = require("argon2");
+const postData_json_1 = __importDefault(require("../data/postData.json"));
+const userData_json_1 = __importDefault(require("../data/userData.json"));
 const Post_1 = require("../entities/Post");
-class CreatePets {
+const User_1 = require("../entities/User");
+let hashedUserData = [];
+userData_json_1.default.forEach((user) => __awaiter(void 0, void 0, void 0, function* () {
+    hashedUserData.push(Object.assign(Object.assign({}, user), { password: yield argon2_1.hash(user.password) }));
+}));
+class CreateMockData {
     run(_, connection) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield Post_1.Post.delete({});
+            yield connection.dropDatabase();
+            yield connection.synchronize();
+            yield connection
+                .createQueryBuilder()
+                .insert()
+                .into(User_1.User)
+                .values(hashedUserData)
+                .execute();
             yield connection
                 .createQueryBuilder()
                 .insert()
                 .into(Post_1.Post)
-                .values(MOCK_DATA_json_1.default)
+                .values(postData_json_1.default)
                 .execute();
         });
     }
 }
-exports.default = CreatePets;
+exports.default = CreateMockData;
 //# sourceMappingURL=createFakeData.js.map

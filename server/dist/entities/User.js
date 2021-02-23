@@ -27,6 +27,7 @@ const type_graphql_1 = require("type-graphql");
 const argon2_1 = __importDefault(require("argon2"));
 const typeorm_1 = require("typeorm");
 const Post_1 = require("./Post");
+const Vote_1 = require("./Vote");
 let User = class User extends typeorm_1.BaseEntity {
     constructor(user) {
         super();
@@ -81,6 +82,10 @@ __decorate([
     typeorm_1.OneToMany(() => Post_1.Post, (post) => post.creator),
     __metadata("design:type", Array)
 ], User.prototype, "posts", void 0);
+__decorate([
+    typeorm_1.OneToMany(() => Vote_1.Vote, (vote) => vote.voter),
+    __metadata("design:type", Array)
+], User.prototype, "votes", void 0);
 __decorate([
     typeorm_1.BeforeInsert(),
     __metadata("design:type", Function),
